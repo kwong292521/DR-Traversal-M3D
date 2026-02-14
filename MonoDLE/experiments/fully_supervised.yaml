@@ -1,0 +1,125 @@
+random_seed: 444
+
+dataset:
+  type: &dataset_type 'KITTI'
+  batch_size: 16
+  use_3d_center: True
+  class_merging: False
+  use_dontcare: False
+  bbox2d_type: 'proj'   # 'proj' or 'anno'
+  meanshape: False      # use predefined anchor or not
+  writelist: ['Car']
+
+  sparse_supervised_pt: False
+  sparse_supervised: False
+  train_objs_ratio: 100
+
+  # data augmentation configs
+  augment:
+    db_car_only: True
+    dont_cp_in_ped_scene: True
+
+    # how to copy paste
+    use_copy_paste: True
+    obj2scene_style: 'soft'
+    occ_priority: 'c2d'
+    use_hq_objs_2: True
+    pos_resample: True
+    use_train_objs_only: True
+    use_train_scenes_only: True
+    dr_ratio: 0.2           # depth resample ratio
+    dr_range: [5, 60]       # depth resample range
+    n_paste_range_raw: [0, 10]
+    n_paste_range_empty: [5, 15]
+    raw_scene_ratio: 0.5 
+
+    # thresholds to filter high_occ objects:
+    max_occ_raw_style: 0.7
+    occ_offset_kitti_level: 0.3   
+    occ_thres_choice: [0.1, 0.3, 0.5, 0.7]
+
+    # instance aug
+    color_aug: False
+    hsv_delta: [90, 30, 30]
+    add_shadow: False
+    shadow_alpha: [0.2, 0.5]
+    light_theta_yx: [0, 45]
+    light_theta_xz: [0, 360]
+
+    # image level augment
+    random_flip: 0.5  
+    random_crop: 0
+    crop_u_scale: 0
+    crop_v_scale: 0
+
+    # scene level augment
+    ego_pose_aug_prob: 0.5
+    aug_depth_range: 2
+    aug_pitch_range: 2
+    aug_roll_range: 2
+    
+
+model:
+  type: 'centernet3d@rgb'
+
+  #========== baseline configs ==========#
+  backbone: 'dla34'
+  neck: 'DLAUp'
+  num_class: 3
+  obj_confi: 'gup'
+  feat_channel: 256
+  depth&uncer_dcp: False  
+
+  rgb_IN_pretrained: True     
+  depth_IN_pretrained: False
+
+  
+optimizer:
+  type: 'adamw'
+  lr: 2.25e-4
+  weight_decay: 0.00001
+  # AdamW param
+  beta_1: 0.95
+  beta_2: 0.99
+
+lr_scheduler:
+  type: 'cyclic'
+  # for base
+  warmup: True  # 5 epoches, cosine warmup, init_lir=0.00001 in default
+  decay_rate: 0.1
+  decay_list: [160]   # for cyclic's every epoch val
+
+
+trainer:
+  tv4t_mode: False    # test set mode
+
+  max_epoch: 200
+  gpu_ids: 0
+  use_ddp: False      # 是否使用ddp(多卡大batch方案)
+  use_amp: False
+  
+  eval_frequency: 1 # evaluation interval (in epoch)
+  save_frequency: 1 # checkpoint save interval (in epoch)
+  disp_frequency: 90 # display interval (in batch)
+  log_dir: './log'
+  log_fname: 'fully_supervised-train.log'
+  train_states_fname: 'fully_supervised-train_states.json'
+  weight_states_fname: 'fully_supervised-weight_states.json'
+  train_idx: 'fully_supervised'
+
+  # pretrain_model: ''
+  # resume_model: './log/checkpoints/centernet3d@rgb/fully_supervised/checkpoint_latest.pth'
+  # resume_start_epoch: 0
+
+
+tester:
+  type: *dataset_type
+  mode: single   # 'single' or 'all'
+  # checkpoint: ''  # for 'single' mode
+  # checkpoints_dir: ''  # for 'all' model
+  threshold: 0.2  # confidence filter
+  log_fname: 'test.log'
+  # resume_model: ''  
+  # oup_dirn: ''
+  log_dir: './log'
+  eval_modality: ['rgb']
