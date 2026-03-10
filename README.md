@@ -76,14 +76,10 @@ If you find our work useful in your research, please consider citing:
 
 ```latex
 @article{kuang2026object,
-  title={Object-Scene-Camera Decomposition and Recomposition for Data-Efficient Monocular 3D Detection},
-  author={},
-  journal={International Journal of Computer Vision},
-  volume={},
-  number={},
-  pages={},
-  year={2026},
-  publisher={Springer}
+  title={Object-Scene-Camera Decomposition and Recomposition for Data-Efficient Monocular 3D Object Detection},
+  author={Kuang, Zhaonian and Ding, Rui and Yang, Meng and Zheng, Xinhu and Hua, Gang},
+  journal={arXiv preprint arXiv:2602.20627},
+  year={2026}
 }
 ```
 
