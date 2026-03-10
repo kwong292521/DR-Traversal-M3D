@@ -81,6 +81,17 @@ If you find our work useful in your research, please consider citing:
   journal={arXiv preprint arXiv:2602.20627},
   year={2026}
 }
+@article{kuang2026object,
+  author    = {Zhaonian Kuang and Rui Ding and Meng Yang and Xinhu Zheng and Gang Hua},
+  title     = {Object-Scene-Camera Decomposition and Recomposition for Data Efficient Monocular 3D Object Detection},
+  journal   = {International Journal of Computer Vision},
+  volume    = {134},
+  number    = {4},
+  pages     = {155},
+  year      = {2026},
+  doi       = {10.1007/s11263-026-02755-w},
+  url       = {https://doi.org/10.1007/s11263-026-02755-w}
+}
 ```
 
 ## License
